@@ -8,6 +8,27 @@
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
+    <div id="canvas">
+      <div class="box-wrapper">
+        <div class="box" id="stack">
+          <div class="frame"></div>
+          <div class="frame"></div>
+          <div class="frame"></div>
+          <div class="frame"></div>
+        </div>
+        <div class="box" id="loaf-api">
+          <div class="frame"></div>
+          <div class="frame"></div>
+          <div class="frame"></div>
+          <div class="frame"></div>
+        </div>
+      </div>
+      <div id="event-queue"></div>
+      <div id="event-loop">
+        <img src="./assets/loop.svg" id="loop"></img>
+        <img src="./assets/loaf.png" id="loaf"></img>
+      </div>
+    </div>
     <script src="index.js"></script>
   </body>
 </html>
