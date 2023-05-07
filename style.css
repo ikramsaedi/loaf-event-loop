@@ -54,6 +54,12 @@ body {
   bottom: 5vw;
 }
 
+.frame > p {
+  color: white;
+  text-align: center;
+  padding: 1vw;
+}
+
 .boxes-wrapper {
   width: 100%;
   display: flex;
