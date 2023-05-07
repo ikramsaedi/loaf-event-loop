@@ -1,6 +1,11 @@
 :root {
   --light-pink: #f6bbb7;
+  --hover-pink: #efb6b1;
+  --lighter-pink: #f6bbb76e;
   --dark-pink: #e5645e;
+
+  --padding-x: 2vw;
+  --padding-y: 1vw;
 }
 
 /* Reset CSS */
@@ -11,14 +16,17 @@
 
 body {
   background: #ffecc9;
-  /* padding: 2vw; */
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
 }
 
 #canvas {
   /* my macbook screen width */
   width: 100vw;
-  height: 57vw;
-  /* overflow: hidden; */
+  height: 55vw;
+  padding: var(--padding-y) var(--padding-x);
+  overflow: hidden;
   position: relative;
   border: 1px black solid;
 }
@@ -29,7 +37,7 @@ body {
   background: var(--light-pink);
   padding: 1vw;
   display: flex;
-  flex-direction: column;
+  flex-direction: column-reverse;
   align-items: center;
   gap: 2vw;
 }
@@ -40,8 +48,8 @@ body {
   background: var(--dark-pink);
 }
 
-.box-wrapper {
-  width: 100vw;
+.boxes-wrapper {
+  width: 100%;
   display: flex;
   justify-content: space-between;
 }
@@ -51,8 +59,8 @@ body {
   height: 10vw;
   background: var(--light-pink);
   position: absolute;
-  right: 0;
-  bottom: 0;
+  right: var(--padding-x);
+  bottom: var(--padding-y);
 }
 
 #event-loop {
@@ -62,6 +70,8 @@ body {
   align-items: center;
   width: 20vw;
   height: 20vw;
+  /* might have to change this? */
+  top: 5vw;
 }
 
 #event-loop > img {
@@ -89,4 +99,35 @@ body {
   to {
     transform: rotate(360deg);
   }
+}
+
+#order-loaf {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  background: var(--lighter-pink);
+  border: 2px solid var(--dark-pink);
+  border-radius: 5px;
+  cursor: pointer;
+  width: 10vw;
+  height: 8vw;
+  margin: auto;
+}
+
+#order-loaf:hover {
+  background: var(--hover-pink);
+}
+
+#order-loaf > img {
+  max-width: 80%;
+  max-height: 80%;
+}
+
+p {
+  font-family: monospace;
+  color: var(--dark-pink);
+  font-weight: bold;
+  font-size: 1.5vw;
 }

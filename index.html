@@ -9,24 +9,25 @@
   </head>
   <body>
     <div id="canvas">
-      <div class="box-wrapper">
-        <div class="box" id="stack">
-          <div class="frame"></div>
-          <div class="frame"></div>
-          <div class="frame"></div>
-          <div class="frame"></div>
+      <div class="boxes-wrapper">
+        <div class="box-wrapper">
+          <p>Call Stack</p>
+          <div class="box" id="stack"></div>
         </div>
-        <div class="box" id="loaf-api">
-          <div class="frame"></div>
-          <div class="frame"></div>
-          <div class="frame"></div>
-          <div class="frame"></div>
+        <div class="box-wrapper">
+          <p>Web API</p>
+          <div class="box" id="loaf-api"></div>
         </div>
       </div>
+      <button id="order-loaf">
+        <p>Order Loaf</p>
+        <img src="./assets/cat-loaf.png" />
+      </button>
+
       <div id="event-queue"></div>
       <div id="event-loop">
-        <img src="./assets/loop.svg" id="loop"></img>
-        <img src="./assets/loaf.png" id="loaf"></img>
+        <img src="./assets/loop.svg" id="loop" />
+        <img src="./assets/loaf.png" id="loaf" />
       </div>
     </div>
     <script src="index.js"></script>
