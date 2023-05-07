@@ -57,7 +57,7 @@ body {
 .frame > p {
   color: white;
   text-align: center;
-  padding: 1vw;
+  padding: 1vw 0;
 }
 
 .boxes-wrapper {
@@ -66,13 +66,16 @@ body {
   justify-content: space-between;
 }
 
+#event-queue-wrapper {
+  position: absolute;
+  right: var(--padding-x);
+  bottom: var(--padding-y);
+}
+
 #event-queue {
   width: 50vw;
   height: 10vw;
   background: var(--light-pink);
-  position: absolute;
-  right: var(--padding-x);
-  bottom: var(--padding-y);
 }
 
 #event-loop {
