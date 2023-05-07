@@ -48,6 +48,12 @@ body {
   background: var(--dark-pink);
 }
 
+.carried-frame {
+  position: relative;
+  /* put on top of the cat */
+  bottom: 5vw;
+}
+
 .boxes-wrapper {
   width: 100%;
   display: flex;
