@@ -8,36 +8,52 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+// Elements
 const orderLoafButton = document.querySelector("#order-loaf");
 const eventLoaf = document.querySelector("#event-loop");
 const stack = document.querySelector("#stack");
 const eventQueue = document.querySelector("#event-queue");
+const webAPI = document.querySelector("#web-api");
+// Coords
+const startCoords = [0, 0];
+const centerCoords = [38, -18];
+const eventQueueCoords = [40, 4];
+const stackCoords = [10, -18];
+const webAPICoords = [78, -18];
 function onOrderButtonClick(e) {
     return __awaiter(this, void 0, void 0, function* () {
-        yield moveToLocation([0, 0], [38, -18]);
-        //   add
+        yield moveToLocation([0, 0], centerCoords, eventLoaf);
         const frame = document.createElement("div");
-        yield addFrameToLoaf("orderLoaf()", frame);
-        yield moveToLocation([38, -18], [40, 4]);
-        // stack = [10, -18]
-        eventLoaf.removeChild(frame);
-        frame.classList.remove("carried-frame");
-        eventQueue === null || eventQueue === void 0 ? void 0 : eventQueue.appendChild(frame);
-        setTimeout(() => addOrderInstructions("sendOrder()"), 1000);
-        setTimeout(() => addOrderInstructions("confirmOrder()"), 2000);
+        yield addFrameToLoaf(frame, "orderLoaf()");
+        yield moveToLocation(centerCoords, stackCoords, eventLoaf);
+        addFrameToBox(frame, stack);
+        setTimeout(() => addOrderInstructions("prepare()"), 1000);
+        setTimeout(() => addOrderInstructions("sendToKitchen()"), 2000);
+        setTimeout(() => __awaiter(this, void 0, void 0, function* () {
+            const topStackFrame = stack === null || stack === void 0 ? void 0 : stack.lastElementChild;
+            if (topStackFrame && webAPI) {
+                addFrameToLoaf(topStackFrame);
+                yield moveToLocation(stackCoords, webAPICoords, eventLoaf);
+                addFrameToBox(topStackFrame, webAPI);
+                moveToLocation(webAPICoords, startCoords, eventLoaf);
+            }
+        }), 3000);
     });
 }
-function addFrameToLoaf(text, frame) {
+function addFrameToLoaf(frame, text) {
     frame.classList.add("frame", "carried-frame");
     const frameText = document.createElement("p");
-    frameText.innerText = text;
+    if (text)
+        frameText.innerText = text;
     frame.appendChild(frameText);
     eventLoaf.appendChild(frame);
 }
+function addFrameToBox(frame, box) {
+    eventLoaf.removeChild(frame);
+    frame.classList.remove("carried-frame");
+    box.appendChild(frame);
+}
 function addOrderInstructions(text) {
-    // give order to kitchen
-    // bake loaf
-    // serve loaf to customer
     const frame = document.createElement("div");
     frame.classList.add("frame");
     const frameText = document.createElement("p");
@@ -45,7 +61,7 @@ function addOrderInstructions(text) {
     frame.appendChild(frameText);
     stack === null || stack === void 0 ? void 0 : stack.appendChild(frame);
 }
-function moveToLocation(currentCoords, destinationCoords) {
+function moveToLocation(currentCoords, destinationCoords, cat) {
     return __awaiter(this, void 0, void 0, function* () {
         const animationOptions = {
             duration: 3000,

@@ -42,10 +42,20 @@ body {
   gap: 2vw;
 }
 
+@keyframes fadein {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
 .frame {
   width: 90%;
   height: 4vw;
   background: var(--dark-pink);
+  animation: fadein 0.3s;
 }
 
 .carried-frame {
@@ -142,7 +152,7 @@ body {
   background: var(--hover-pink);
 }
 
-#order-loaf > img {
+img {
   max-width: 80%;
   max-height: 80%;
 }
@@ -152,4 +162,10 @@ p {
   color: var(--dark-pink);
   font-weight: bold;
   font-size: 1.5vw;
+}
+
+#chef-loaf {
+  position: absolute;
+  width: 12vw;
+  right: 0;
 }

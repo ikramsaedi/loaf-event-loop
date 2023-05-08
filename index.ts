@@ -1,42 +1,54 @@
+// Elements
 const orderLoafButton = document.querySelector("#order-loaf");
 const eventLoaf = document.querySelector("#event-loop") as HTMLElement;
-const stack = document.querySelector("#stack");
+const stack = document.querySelector("#stack") as HTMLElement;
 const eventQueue = document.querySelector("#event-queue");
+const webAPI = document.querySelector("#web-api");
+
+// Coords
+const startCoords = [0, 0];
+const centerCoords = [38, -18];
+const eventQueueCoords = [40, 4];
+const stackCoords = [10, -18];
+const webAPICoords = [78, -18];
 
 async function onOrderButtonClick(e: Event) {
-  await moveToLocation([0, 0], [38, -18]);
+  await moveToLocation([0, 0], centerCoords, eventLoaf);
 
-  //   add
   const frame = document.createElement("div");
-  await addFrameToLoaf("orderLoaf()", frame);
-  await moveToLocation([38, -18], [40, 4]);
+  await addFrameToLoaf(frame, "orderLoaf()");
 
-  // stack = [10, -18]
+  await moveToLocation(centerCoords, stackCoords, eventLoaf);
+  addFrameToBox(frame, stack);
 
-  eventLoaf.removeChild(frame);
-  frame.classList.remove("carried-frame");
-
-  eventQueue?.appendChild(frame);
-
-  setTimeout(() => addOrderInstructions("sendOrder()"), 1000);
-  setTimeout(() => addOrderInstructions("confirmOrder()"), 2000);
+  setTimeout(() => addOrderInstructions("prepare()"), 1000);
+  setTimeout(() => addOrderInstructions("sendToKitchen()"), 2000);
+  setTimeout(async () => {
+    const topStackFrame = stack?.lastElementChild;
+    if (topStackFrame && webAPI) {
+      addFrameToLoaf(topStackFrame);
+      await moveToLocation(stackCoords, webAPICoords, eventLoaf);
+      addFrameToBox(topStackFrame, webAPI);
+      moveToLocation(webAPICoords, startCoords, eventLoaf);
+    }
+  }, 3000);
 }
 
-function addFrameToLoaf(text: string, frame: HTMLDivElement) {
+function addFrameToLoaf(frame: Element, text?: string) {
   frame.classList.add("frame", "carried-frame");
 
   const frameText = document.createElement("p");
-  frameText.innerText = text;
+  if (text) frameText.innerText = text;
 
   frame.appendChild(frameText);
   eventLoaf.appendChild(frame);
 }
-
+function addFrameToBox(frame: Element, box: Element) {
+  eventLoaf.removeChild(frame);
+  frame.classList.remove("carried-frame");
+  box.appendChild(frame);
+}
 function addOrderInstructions(text: string) {
-  // give order to kitchen
-  // bake loaf
-  // serve loaf to customer
-
   const frame = document.createElement("div");
   frame.classList.add("frame");
   const frameText = document.createElement("p");
@@ -47,7 +59,8 @@ function addOrderInstructions(text: string) {
 
 async function moveToLocation(
   currentCoords: number[],
-  destinationCoords: number[]
+  destinationCoords: number[],
+  cat: Element
 ) {
   const animationOptions = {
     duration: 3000,
