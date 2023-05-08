@@ -1,36 +1,22 @@
 const orderLoafButton = document.querySelector("#order-loaf");
 const eventLoaf = document.querySelector("#event-loop") as HTMLElement;
 const stack = document.querySelector("#stack");
+const eventQueue = document.querySelector("#event-queue");
 
 async function onOrderButtonClick(e: Event) {
-  const center = "translate(38vw, -18vw)";
-  const moveToCenterKeyframes = [
-    { transform: "translate(0vw, 0vw)" },
-    { transform: center },
-  ];
-
-  const animationOptions = {
-    duration: 3000,
-    easing: "ease",
-  };
-
-  await eventLoaf.animate(moveToCenterKeyframes, animationOptions).finished;
-  await eventLoaf.style.setProperty("transform", center);
+  await moveToLocation([0, 0], [38, -18]);
 
   //   add
   const frame = document.createElement("div");
   await addFrameToLoaf("orderLoaf()", frame);
+  await moveToLocation([38, -18], [40, 4]);
 
-  // move to stack
-  const stackPos = "translate(10vw, -18vw)";
-  const moveToStackKeyframes = [{ transform: center }, { transform: stackPos }];
-  await eventLoaf.animate(moveToStackKeyframes, animationOptions).finished;
-  await eventLoaf.style.setProperty("transform", stackPos);
+  // stack = [10, -18]
 
   eventLoaf.removeChild(frame);
   frame.classList.remove("carried-frame");
 
-  stack?.appendChild(frame);
+  eventQueue?.appendChild(frame);
 
   setTimeout(() => addOrderInstructions("sendOrder()"), 1000);
   setTimeout(() => addOrderInstructions("confirmOrder()"), 2000);
@@ -59,21 +45,24 @@ function addOrderInstructions(text: string) {
   stack?.appendChild(frame);
 }
 
+async function moveToLocation(
+  currentCoords: number[],
+  destinationCoords: number[]
+) {
+  const animationOptions = {
+    duration: 3000,
+    easing: "ease",
+  };
+
+  const current = `translate(${currentCoords[0]}vw, ${currentCoords[1]}vw)`;
+  const destination = `translate(${destinationCoords[0]}vw, ${destinationCoords[1]}vw)`;
+  const moveToQueueKeyframes = [
+    { transform: current },
+    { transform: destination },
+  ];
+
+  await eventLoaf.animate(moveToQueueKeyframes, animationOptions).finished;
+  await eventLoaf.style.setProperty("transform", destination);
+}
+
 orderLoafButton?.addEventListener("click", onOrderButtonClick);
-
-fetch("https://loaf.dev").then((result) => console.log(result));
-
-console.log("this will log before we see the result");
-
-const process_control_block = {
-  state: "new",
-  id: 1234,
-  registers: "memory assigned to the process",
-};
-
-const thread_control_block = {
-  state: "new",
-  id: 278,
-  process_id: 1234,
-  registers: "same as memory assigned to parent process",
-};
