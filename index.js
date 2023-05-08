@@ -40,16 +40,31 @@ function onOrderButtonClick(e) {
         addFrameToBox(frame, stack);
         yield promiseTimeout(() => addOrderInstructions("prepare()"), 1000);
         yield promiseTimeout(() => addOrderInstructions("sendToKitchen()"), 1000);
+        const topStackFrame = stack === null || stack === void 0 ? void 0 : stack.lastElementChild;
         yield promiseTimeout(() => __awaiter(this, void 0, void 0, function* () {
-            const topStackFrame = stack === null || stack === void 0 ? void 0 : stack.lastElementChild;
             if (topStackFrame && webAPI && chefLoaf) {
                 addFrameToLoaf(topStackFrame);
-                yield moveToLocation(stackCoords, webAPICoords, eventLoaf);
-                addFrameToBox(topStackFrame, webAPI);
-                yield moveToLocation(webAPICoords, startCoords, eventLoaf);
-                yield moveToLocation([0, 0], [-40, 40], chefLoaf);
             }
         }), 1000);
+        if (topStackFrame && webAPI) {
+            yield moveToLocation(stackCoords, webAPICoords, eventLoaf);
+            addFrameToBox(topStackFrame, webAPI);
+            // i intend to add a delay. want to show some sparkly animation to show the chef is working
+            while (topStackFrame.firstChild) {
+                topStackFrame.removeChild(topStackFrame.firstChild);
+            }
+            const frameText = document.createElement("p");
+            frameText.innerText = "serveLoaf()";
+            topStackFrame.appendChild(frameText);
+            promiseTimeout(() => {
+                chefLoaf.appendChild(topStackFrame);
+            }, 2000);
+            yield moveToLocation(webAPICoords, startCoords, eventLoaf);
+            yield moveToLocation([0, 0], [-40, 36], chefLoaf);
+            chefLoaf.removeChild(topStackFrame);
+            eventQueue === null || eventQueue === void 0 ? void 0 : eventQueue.appendChild(topStackFrame);
+            yield moveToLocation([-40, 36], [0, 0], chefLoaf);
+        }
     });
 }
 function addFrameToLoaf(frame, text) {

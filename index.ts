@@ -36,16 +36,35 @@ async function onOrderButtonClick(e: Event) {
   await promiseTimeout(() => addOrderInstructions("prepare()"), 1000);
   await promiseTimeout(() => addOrderInstructions("sendToKitchen()"), 1000);
 
+  const topStackFrame = stack?.lastElementChild as HTMLElement;
   await promiseTimeout(async () => {
-    const topStackFrame = stack?.lastElementChild;
     if (topStackFrame && webAPI && chefLoaf) {
       addFrameToLoaf(topStackFrame);
-      await moveToLocation(stackCoords, webAPICoords, eventLoaf);
-      addFrameToBox(topStackFrame, webAPI);
-      await moveToLocation(webAPICoords, startCoords, eventLoaf);
-      await moveToLocation([0, 0], [-40, 40], chefLoaf);
     }
   }, 1000);
+
+  if (topStackFrame && webAPI) {
+    await moveToLocation(stackCoords, webAPICoords, eventLoaf);
+    addFrameToBox(topStackFrame, webAPI);
+
+    // i intend to add a delay. want to show some sparkly animation to show the chef is working
+    while (topStackFrame.firstChild) {
+      topStackFrame.removeChild(topStackFrame.firstChild);
+    }
+    const frameText = document.createElement("p");
+    frameText.innerText = "serveLoaf()";
+    topStackFrame.appendChild(frameText);
+
+    promiseTimeout(() => {
+      chefLoaf.appendChild(topStackFrame);
+    }, 2000);
+    await moveToLocation(webAPICoords, startCoords, eventLoaf);
+    await moveToLocation([0, 0], [-40, 36], chefLoaf);
+    chefLoaf.removeChild(topStackFrame);
+
+    eventQueue?.appendChild(topStackFrame);
+    await moveToLocation([-40, 36], [0, 0], chefLoaf);
+  }
 }
 
 function addFrameToLoaf(frame: Element, text?: string) {
@@ -57,11 +76,13 @@ function addFrameToLoaf(frame: Element, text?: string) {
   frame.appendChild(frameText);
   eventLoaf.appendChild(frame);
 }
+
 function addFrameToBox(frame: Element, box: Element) {
   eventLoaf.removeChild(frame);
   frame.classList.remove("carried-frame");
   box.appendChild(frame);
 }
+
 function addOrderInstructions(text: string) {
   const frame = document.createElement("div");
   frame.classList.add("frame");
