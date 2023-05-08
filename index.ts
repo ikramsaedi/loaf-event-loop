@@ -1,6 +1,7 @@
 // Elements
 const orderLoafButton = document.querySelector("#order-loaf");
 const eventLoaf = document.querySelector("#event-loop") as HTMLElement;
+const chefLoaf = document.querySelector("#chef-loaf") as HTMLElement;
 const stack = document.querySelector("#stack") as HTMLElement;
 const eventQueue = document.querySelector("#event-queue");
 const webAPI = document.querySelector("#web-api");
@@ -12,6 +13,17 @@ const eventQueueCoords = [40, 4];
 const stackCoords = [10, -18];
 const webAPICoords = [78, -18];
 
+// This lets me chain timeouts
+function promiseTimeout(callback: () => any, timeout: number) {
+  return new Promise<void>((resolve) => {
+    const resolver = () => {
+      callback();
+      resolve();
+    };
+    setTimeout(resolver, timeout);
+  });
+}
+
 async function onOrderButtonClick(e: Event) {
   await moveToLocation([0, 0], centerCoords, eventLoaf);
 
@@ -21,17 +33,19 @@ async function onOrderButtonClick(e: Event) {
   await moveToLocation(centerCoords, stackCoords, eventLoaf);
   addFrameToBox(frame, stack);
 
-  setTimeout(() => addOrderInstructions("prepare()"), 1000);
-  setTimeout(() => addOrderInstructions("sendToKitchen()"), 2000);
-  setTimeout(async () => {
+  await promiseTimeout(() => addOrderInstructions("prepare()"), 1000);
+  await promiseTimeout(() => addOrderInstructions("sendToKitchen()"), 1000);
+
+  await promiseTimeout(async () => {
     const topStackFrame = stack?.lastElementChild;
-    if (topStackFrame && webAPI) {
+    if (topStackFrame && webAPI && chefLoaf) {
       addFrameToLoaf(topStackFrame);
       await moveToLocation(stackCoords, webAPICoords, eventLoaf);
       addFrameToBox(topStackFrame, webAPI);
-      moveToLocation(webAPICoords, startCoords, eventLoaf);
+      await moveToLocation(webAPICoords, startCoords, eventLoaf);
+      await moveToLocation([0, 0], [-40, 40], chefLoaf);
     }
-  }, 3000);
+  }, 1000);
 }
 
 function addFrameToLoaf(frame: Element, text?: string) {
@@ -60,7 +74,7 @@ function addOrderInstructions(text: string) {
 async function moveToLocation(
   currentCoords: number[],
   destinationCoords: number[],
-  cat: Element
+  cat: HTMLElement
 ) {
   const animationOptions = {
     duration: 3000,
@@ -74,8 +88,8 @@ async function moveToLocation(
     { transform: destination },
   ];
 
-  await eventLoaf.animate(moveToQueueKeyframes, animationOptions).finished;
-  await eventLoaf.style.setProperty("transform", destination);
+  await cat.animate(moveToQueueKeyframes, animationOptions).finished;
+  await cat.style.setProperty("transform", destination);
 }
 
 orderLoafButton?.addEventListener("click", onOrderButtonClick);

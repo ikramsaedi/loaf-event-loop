@@ -166,6 +166,7 @@ p {
 
 #chef-loaf {
   position: absolute;
+  z-index: 1;
   width: 12vw;
   right: 0;
 }

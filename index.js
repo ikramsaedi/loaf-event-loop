@@ -11,6 +11,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 // Elements
 const orderLoafButton = document.querySelector("#order-loaf");
 const eventLoaf = document.querySelector("#event-loop");
+const chefLoaf = document.querySelector("#chef-loaf");
 const stack = document.querySelector("#stack");
 const eventQueue = document.querySelector("#event-queue");
 const webAPI = document.querySelector("#web-api");
@@ -20,6 +21,16 @@ const centerCoords = [38, -18];
 const eventQueueCoords = [40, 4];
 const stackCoords = [10, -18];
 const webAPICoords = [78, -18];
+// This lets me chain timeouts
+function promiseTimeout(callback, timeout) {
+    return new Promise((resolve) => {
+        const resolver = () => {
+            callback();
+            resolve();
+        };
+        setTimeout(resolver, timeout);
+    });
+}
 function onOrderButtonClick(e) {
     return __awaiter(this, void 0, void 0, function* () {
         yield moveToLocation([0, 0], centerCoords, eventLoaf);
@@ -27,17 +38,18 @@ function onOrderButtonClick(e) {
         yield addFrameToLoaf(frame, "orderLoaf()");
         yield moveToLocation(centerCoords, stackCoords, eventLoaf);
         addFrameToBox(frame, stack);
-        setTimeout(() => addOrderInstructions("prepare()"), 1000);
-        setTimeout(() => addOrderInstructions("sendToKitchen()"), 2000);
-        setTimeout(() => __awaiter(this, void 0, void 0, function* () {
+        yield promiseTimeout(() => addOrderInstructions("prepare()"), 1000);
+        yield promiseTimeout(() => addOrderInstructions("sendToKitchen()"), 1000);
+        yield promiseTimeout(() => __awaiter(this, void 0, void 0, function* () {
             const topStackFrame = stack === null || stack === void 0 ? void 0 : stack.lastElementChild;
-            if (topStackFrame && webAPI) {
+            if (topStackFrame && webAPI && chefLoaf) {
                 addFrameToLoaf(topStackFrame);
                 yield moveToLocation(stackCoords, webAPICoords, eventLoaf);
                 addFrameToBox(topStackFrame, webAPI);
-                moveToLocation(webAPICoords, startCoords, eventLoaf);
+                yield moveToLocation(webAPICoords, startCoords, eventLoaf);
+                yield moveToLocation([0, 0], [-40, 40], chefLoaf);
             }
-        }), 3000);
+        }), 1000);
     });
 }
 function addFrameToLoaf(frame, text) {
@@ -73,8 +85,8 @@ function moveToLocation(currentCoords, destinationCoords, cat) {
             { transform: current },
             { transform: destination },
         ];
-        yield eventLoaf.animate(moveToQueueKeyframes, animationOptions).finished;
-        yield eventLoaf.style.setProperty("transform", destination);
+        yield cat.animate(moveToQueueKeyframes, animationOptions).finished;
+        yield cat.style.setProperty("transform", destination);
     });
 }
 orderLoafButton === null || orderLoafButton === void 0 ? void 0 : orderLoafButton.addEventListener("click", onOrderButtonClick);
