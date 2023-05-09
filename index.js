@@ -40,7 +40,7 @@ function onOrderButtonClick(e) {
         addFrameToBox(frame, stack);
         yield promiseTimeout(() => addOrderInstructions("prepare()"), 1000);
         yield promiseTimeout(() => addOrderInstructions("sendToKitchen()"), 1000);
-        const topStackFrame = stack === null || stack === void 0 ? void 0 : stack.lastElementChild;
+        let topStackFrame = stack === null || stack === void 0 ? void 0 : stack.lastElementChild;
         yield promiseTimeout(() => __awaiter(this, void 0, void 0, function* () {
             if (topStackFrame && webAPI && chefLoaf) {
                 addFrameToLoaf(topStackFrame);
@@ -50,12 +50,14 @@ function onOrderButtonClick(e) {
             yield moveToLocation(stackCoords, webAPICoords, eventLoaf);
             addFrameToBox(topStackFrame, webAPI);
             // i intend to add a delay. want to show some sparkly animation to show the chef is working
-            while (topStackFrame.firstChild) {
-                topStackFrame.removeChild(topStackFrame.firstChild);
-            }
-            const frameText = document.createElement("p");
-            frameText.innerText = "serveLoaf()";
-            topStackFrame.appendChild(frameText);
+            promiseTimeout(() => {
+                while (topStackFrame.firstChild) {
+                    topStackFrame.removeChild(topStackFrame.firstChild);
+                }
+                const frameText = document.createElement("p");
+                frameText.innerText = "serveLoaf()";
+                topStackFrame.appendChild(frameText);
+            }, 2000);
             promiseTimeout(() => {
                 chefLoaf.appendChild(topStackFrame);
             }, 2000);
@@ -64,6 +66,31 @@ function onOrderButtonClick(e) {
             chefLoaf.removeChild(topStackFrame);
             eventQueue === null || eventQueue === void 0 ? void 0 : eventQueue.appendChild(topStackFrame);
             yield moveToLocation([-40, 36], [0, 0], chefLoaf);
+            yield moveToLocation(startCoords, stackCoords, eventLoaf);
+            yield promiseTimeout(() => {
+                topStackFrame = stack === null || stack === void 0 ? void 0 : stack.lastElementChild;
+                // maybe see if u can fade it before it disappears
+                stack.removeChild(topStackFrame);
+            }, 1000);
+            yield promiseTimeout(() => {
+                topStackFrame = stack === null || stack === void 0 ? void 0 : stack.lastElementChild;
+                // maybe see if u can fade it before it disappears
+                stack.removeChild(topStackFrame);
+            }, 1000);
+            yield promiseTimeout(() => __awaiter(this, void 0, void 0, function* () {
+                yield moveToLocation(stackCoords, eventQueueCoords, eventLoaf);
+                const frame = eventQueue === null || eventQueue === void 0 ? void 0 : eventQueue.firstElementChild;
+                yield addFrameToLoaf(frame);
+                yield moveToLocation(eventQueueCoords, stackCoords, eventLoaf);
+                yield addFrameToBox(frame, stack);
+                // ugh the nesting! ideally would like to not have this nested
+                yield promiseTimeout(() => {
+                    stack.removeChild(stack === null || stack === void 0 ? void 0 : stack.firstElementChild);
+                    const frame = document.createElement("div");
+                    frame.classList.add("frame");
+                    addFrameToLoaf(frame, "Loaf is served! 🍞");
+                }, 2000);
+            }), 1000);
         }
     });
 }
