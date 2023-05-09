@@ -129,11 +129,11 @@ function moveToLocation(currentCoords, destinationCoords, cat) {
         };
         const current = `translate(${currentCoords[0]}vw, ${currentCoords[1]}vw)`;
         const destination = `translate(${destinationCoords[0]}vw, ${destinationCoords[1]}vw)`;
-        const moveToQueueKeyframes = [
+        const moveToDestinationKeyframes = [
             { transform: current },
             { transform: destination },
         ];
-        yield cat.animate(moveToQueueKeyframes, animationOptions).finished;
+        yield cat.animate(moveToDestinationKeyframes, animationOptions).finished;
         yield cat.style.setProperty("transform", destination);
     });
 }

@@ -140,12 +140,12 @@ async function moveToLocation(
 
   const current = `translate(${currentCoords[0]}vw, ${currentCoords[1]}vw)`;
   const destination = `translate(${destinationCoords[0]}vw, ${destinationCoords[1]}vw)`;
-  const moveToQueueKeyframes = [
+  const moveToDestinationKeyframes = [
     { transform: current },
     { transform: destination },
   ];
 
-  await cat.animate(moveToQueueKeyframes, animationOptions).finished;
+  await cat.animate(moveToDestinationKeyframes, animationOptions).finished;
   await cat.style.setProperty("transform", destination);
 }
 
