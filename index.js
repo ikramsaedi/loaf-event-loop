@@ -42,6 +42,7 @@ function onOrderButtonClick(e) {
         addFrameToBox(frame, stack);
         yield promiseTimeout(() => addOrderInstructions("prepare()"), 1000);
         yield promiseTimeout(() => addOrderInstructions("sendToKitchen()"), 1000);
+        // add top frame to event loaf
         let topStackFrame = stack === null || stack === void 0 ? void 0 : stack.lastElementChild;
         yield promiseTimeout(() => __awaiter(this, void 0, void 0, function* () {
             if (topStackFrame && webAPI && chefLoaf) {
@@ -54,7 +55,6 @@ function onOrderButtonClick(e) {
             const bakingGif = document.createElement("img");
             bakingGif.src = "./assets/baking.gif";
             webAPI.appendChild(bakingGif);
-            // i intend to add a delay. want to show some sparkly animation to show the chef is working
             promiseTimeout(() => {
                 while (topStackFrame.firstChild) {
                     topStackFrame.removeChild(topStackFrame.firstChild);
