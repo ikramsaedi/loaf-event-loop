@@ -25,14 +25,14 @@ function promiseTimeout(callback: () => any, timeout: number) {
 }
 
 async function onOrderButtonClick(e: Event) {
+  // go to center and pick up order
   await moveToLocation([0, 0], centerCoords, eventLoaf);
-
   const frame = document.createElement("div");
   await addFrameToLoaf(frame, "orderLoaf()");
 
+  // move to stack & add order instructions
   await moveToLocation(centerCoords, stackCoords, eventLoaf);
   addFrameToBox(frame, stack);
-
   await promiseTimeout(() => addOrderInstructions("prepare()"), 1000);
   await promiseTimeout(() => addOrderInstructions("sendToKitchen()"), 1000);
 
@@ -47,6 +47,10 @@ async function onOrderButtonClick(e: Event) {
     await moveToLocation(stackCoords, webAPICoords, eventLoaf);
     addFrameToBox(topStackFrame, webAPI);
 
+    const bakingGif = document.createElement("img");
+    bakingGif.src = "./assets/baking.gif";
+    webAPI.appendChild(bakingGif);
+
     // i intend to add a delay. want to show some sparkly animation to show the chef is working
     promiseTimeout(() => {
       while (topStackFrame.firstChild) {
@@ -54,6 +58,7 @@ async function onOrderButtonClick(e: Event) {
       }
       const frameText = document.createElement("p");
       frameText.innerText = "serveLoaf()";
+      webAPI.removeChild(bakingGif);
       topStackFrame.appendChild(frameText);
     }, 2000);
 
