@@ -1,3 +1,5 @@
+// Apologies to anyone reading this! The onOrderButtonClick is a bit of a big monster function
+
 // Elements
 const orderLoafButton = document.querySelector("#order-loaf");
 const eventLoaf = document.querySelector("#event-loop") as HTMLElement;
@@ -6,7 +8,7 @@ const stack = document.querySelector("#stack") as HTMLElement;
 const eventQueue = document.querySelector("#event-queue");
 const webAPI = document.querySelector("#web-api");
 
-// Coords
+// Coords relative to the event loaf element specifically
 const startCoords = [0, 0];
 const centerCoords = [38, -18];
 const eventQueueCoords = [40, 4];
@@ -39,15 +41,15 @@ async function onOrderButtonClick(e: Event) {
   // add top frame to event loaf
   let topStackFrame = stack?.lastElementChild as HTMLElement;
   await promiseTimeout(async () => {
-    if (topStackFrame && webAPI && chefLoaf) {
-      addFrameToLoaf(topStackFrame);
-    }
+    addFrameToLoaf(topStackFrame);
   }, 1000);
 
   if (topStackFrame && webAPI) {
+    // move to web API and put frame on it
     await moveToLocation(stackCoords, webAPICoords, eventLoaf);
     addFrameToBox(topStackFrame, webAPI);
 
+    // add baking gif to DOM
     const bakingGif = document.createElement("img");
     bakingGif.src = "./assets/baking.gif";
     webAPI.appendChild(bakingGif);
@@ -60,11 +62,9 @@ async function onOrderButtonClick(e: Event) {
       frameText.innerText = "serveLoaf()";
       webAPI.removeChild(bakingGif);
       topStackFrame.appendChild(frameText);
-    }, 2000);
-
-    promiseTimeout(() => {
       chefLoaf.appendChild(topStackFrame);
     }, 2000);
+
     await moveToLocation(webAPICoords, startCoords, eventLoaf);
     await moveToLocation([0, 0], [-40, 36], chefLoaf);
     chefLoaf.removeChild(topStackFrame);
@@ -73,22 +73,20 @@ async function onOrderButtonClick(e: Event) {
     await moveToLocation([-40, 36], [0, 0], chefLoaf);
 
     await moveToLocation(startCoords, stackCoords, eventLoaf);
-    await promiseTimeout(() => {
-      topStackFrame = stack?.lastElementChild as HTMLElement;
-      // maybe see if u can fade it before it disappears
-      stack.removeChild(topStackFrame);
-    }, 1000);
 
-    await promiseTimeout(() => {
-      topStackFrame = stack?.lastElementChild as HTMLElement;
-      // maybe see if u can fade it before it disappears
-      stack.removeChild(topStackFrame);
-    }, 1000);
+    while (stack?.lastElementChild) {
+      await promiseTimeout(() => {
+        // maybe see if u can fade it before it disappears
+        stack.removeChild(stack?.lastElementChild as HTMLElement);
+      }, 1000);
+    }
 
     await promiseTimeout(async () => {
+      // move to eventQueue
       await moveToLocation(stackCoords, eventQueueCoords, eventLoaf);
       const frame = eventQueue?.firstElementChild as HTMLElement;
       await addFrameToLoaf(frame);
+      // move back to stack
       await moveToLocation(eventQueueCoords, stackCoords, eventLoaf);
       await addFrameToBox(frame, stack);
 

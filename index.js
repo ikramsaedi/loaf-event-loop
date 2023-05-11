@@ -1,4 +1,5 @@
 "use strict";
+// Apologies to anyone reading this! The onOrderButtonClick is a bit of a big monster function
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -15,7 +16,7 @@ const chefLoaf = document.querySelector("#chef-loaf");
 const stack = document.querySelector("#stack");
 const eventQueue = document.querySelector("#event-queue");
 const webAPI = document.querySelector("#web-api");
-// Coords
+// Coords relative to the event loaf element specifically
 const startCoords = [0, 0];
 const centerCoords = [38, -18];
 const eventQueueCoords = [40, 4];
@@ -45,13 +46,13 @@ function onOrderButtonClick(e) {
         // add top frame to event loaf
         let topStackFrame = stack === null || stack === void 0 ? void 0 : stack.lastElementChild;
         yield promiseTimeout(() => __awaiter(this, void 0, void 0, function* () {
-            if (topStackFrame && webAPI && chefLoaf) {
-                addFrameToLoaf(topStackFrame);
-            }
+            addFrameToLoaf(topStackFrame);
         }), 1000);
         if (topStackFrame && webAPI) {
+            // move to web API and put frame on it
             yield moveToLocation(stackCoords, webAPICoords, eventLoaf);
             addFrameToBox(topStackFrame, webAPI);
+            // add baking gif to DOM
             const bakingGif = document.createElement("img");
             bakingGif.src = "./assets/baking.gif";
             webAPI.appendChild(bakingGif);
@@ -63,8 +64,6 @@ function onOrderButtonClick(e) {
                 frameText.innerText = "serveLoaf()";
                 webAPI.removeChild(bakingGif);
                 topStackFrame.appendChild(frameText);
-            }, 2000);
-            promiseTimeout(() => {
                 chefLoaf.appendChild(topStackFrame);
             }, 2000);
             yield moveToLocation(webAPICoords, startCoords, eventLoaf);
@@ -73,20 +72,18 @@ function onOrderButtonClick(e) {
             eventQueue === null || eventQueue === void 0 ? void 0 : eventQueue.appendChild(topStackFrame);
             yield moveToLocation([-40, 36], [0, 0], chefLoaf);
             yield moveToLocation(startCoords, stackCoords, eventLoaf);
-            yield promiseTimeout(() => {
-                topStackFrame = stack === null || stack === void 0 ? void 0 : stack.lastElementChild;
-                // maybe see if u can fade it before it disappears
-                stack.removeChild(topStackFrame);
-            }, 1000);
-            yield promiseTimeout(() => {
-                topStackFrame = stack === null || stack === void 0 ? void 0 : stack.lastElementChild;
-                // maybe see if u can fade it before it disappears
-                stack.removeChild(topStackFrame);
-            }, 1000);
+            while (stack === null || stack === void 0 ? void 0 : stack.lastElementChild) {
+                yield promiseTimeout(() => {
+                    // maybe see if u can fade it before it disappears
+                    stack.removeChild(stack === null || stack === void 0 ? void 0 : stack.lastElementChild);
+                }, 1000);
+            }
             yield promiseTimeout(() => __awaiter(this, void 0, void 0, function* () {
+                // move to eventQueue
                 yield moveToLocation(stackCoords, eventQueueCoords, eventLoaf);
                 const frame = eventQueue === null || eventQueue === void 0 ? void 0 : eventQueue.firstElementChild;
                 yield addFrameToLoaf(frame);
+                // move back to stack
                 yield moveToLocation(eventQueueCoords, stackCoords, eventLoaf);
                 yield addFrameToBox(frame, stack);
                 // ugh the nesting! ideally would like to not have this nested
