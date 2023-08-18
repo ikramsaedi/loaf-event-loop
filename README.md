@@ -8,3 +8,4 @@ I used this to explain a talk in MelbJS for exploring the event loop! It simulat
 ## When developing:
 
 - Use `yarn tsc -w`. This will build the code from TypeScript to JavaScript so that it can be served in the index.html file
+
