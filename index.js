@@ -56,7 +56,14 @@ function onOrderButtonClick(e) {
             const bakingGif = document.createElement("img");
             bakingGif.src = "./assets/baking.gif";
             webAPI.appendChild(bakingGif);
-            promiseTimeout(() => {
+            yield moveToLocation(webAPICoords, stackCoords, eventLoaf);
+            while (stack === null || stack === void 0 ? void 0 : stack.lastElementChild) {
+                yield promiseTimeout(() => {
+                    // maybe see if u can fade it before it disappears
+                    stack.removeChild(stack === null || stack === void 0 ? void 0 : stack.lastElementChild);
+                }, 1000);
+            }
+            yield promiseTimeout(() => {
                 while (topStackFrame.firstChild) {
                     topStackFrame.removeChild(topStackFrame.firstChild);
                 }
@@ -66,18 +73,10 @@ function onOrderButtonClick(e) {
                 topStackFrame.appendChild(frameText);
                 chefLoaf.appendChild(topStackFrame);
             }, 2000);
-            yield moveToLocation(webAPICoords, startCoords, eventLoaf);
             yield moveToLocation([0, 0], [-40, 36], chefLoaf);
             chefLoaf.removeChild(topStackFrame);
             eventQueue === null || eventQueue === void 0 ? void 0 : eventQueue.appendChild(topStackFrame);
             yield moveToLocation([-40, 36], [0, 0], chefLoaf);
-            yield moveToLocation(startCoords, stackCoords, eventLoaf);
-            while (stack === null || stack === void 0 ? void 0 : stack.lastElementChild) {
-                yield promiseTimeout(() => {
-                    // maybe see if u can fade it before it disappears
-                    stack.removeChild(stack === null || stack === void 0 ? void 0 : stack.lastElementChild);
-                }, 1000);
-            }
             yield promiseTimeout(() => __awaiter(this, void 0, void 0, function* () {
                 // move to eventQueue
                 yield moveToLocation(stackCoords, eventQueueCoords, eventLoaf);

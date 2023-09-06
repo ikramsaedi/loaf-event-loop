@@ -54,7 +54,16 @@ async function onOrderButtonClick(e: Event) {
     bakingGif.src = "./assets/baking.gif";
     webAPI.appendChild(bakingGif);
 
-    promiseTimeout(() => {
+    await moveToLocation(webAPICoords, stackCoords, eventLoaf);
+
+    while (stack?.lastElementChild) {
+      await promiseTimeout(() => {
+        // maybe see if u can fade it before it disappears
+        stack.removeChild(stack?.lastElementChild as HTMLElement);
+      }, 1000);
+    }
+
+    await promiseTimeout(() => {
       while (topStackFrame.firstChild) {
         topStackFrame.removeChild(topStackFrame.firstChild);
       }
@@ -65,21 +74,11 @@ async function onOrderButtonClick(e: Event) {
       chefLoaf.appendChild(topStackFrame);
     }, 2000);
 
-    await moveToLocation(webAPICoords, startCoords, eventLoaf);
     await moveToLocation([0, 0], [-40, 36], chefLoaf);
     chefLoaf.removeChild(topStackFrame);
 
     eventQueue?.appendChild(topStackFrame);
     await moveToLocation([-40, 36], [0, 0], chefLoaf);
-
-    await moveToLocation(startCoords, stackCoords, eventLoaf);
-
-    while (stack?.lastElementChild) {
-      await promiseTimeout(() => {
-        // maybe see if u can fade it before it disappears
-        stack.removeChild(stack?.lastElementChild as HTMLElement);
-      }, 1000);
-    }
 
     await promiseTimeout(async () => {
       // move to eventQueue
