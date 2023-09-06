@@ -80,23 +80,21 @@ async function onOrderButtonClick(e: Event) {
     eventQueue?.appendChild(topStackFrame);
     await moveToLocation([-40, 36], [0, 0], chefLoaf);
 
-    await promiseTimeout(async () => {
-      // move to eventQueue
-      await moveToLocation(stackCoords, eventQueueCoords, eventLoaf);
-      const frame = eventQueue?.firstElementChild as HTMLElement;
-      await addFrameToLoaf(frame);
-      // move back to stack
-      await moveToLocation(eventQueueCoords, stackCoords, eventLoaf);
-      await addFrameToBox(frame, stack);
+    // move to eventQueue
+    await moveToLocation(stackCoords, eventQueueCoords, eventLoaf);
+    const frame = eventQueue?.firstElementChild as HTMLElement;
+    await addFrameToLoaf(frame);
+    // move back to stack
+    await moveToLocation(eventQueueCoords, stackCoords, eventLoaf);
+    await addFrameToBox(frame, stack);
 
-      // ugh the nesting! ideally would like to not have this nested
-      await promiseTimeout(() => {
-        stack.removeChild(stack?.firstElementChild as HTMLElement);
-        const frame = document.createElement("div");
-        frame.classList.add("frame");
-        addFrameToLoaf(frame, "Loaf is served! 🍞");
-      }, 2000);
-    }, 1000);
+    // ugh the nesting! ideally would like to not have this nested
+    await promiseTimeout(() => {
+      stack.removeChild(stack?.firstElementChild as HTMLElement);
+      const frame = document.createElement("div");
+      frame.classList.add("frame");
+      addFrameToLoaf(frame, "Loaf is served! 🍞");
+    }, 2000);
   }
 }
 

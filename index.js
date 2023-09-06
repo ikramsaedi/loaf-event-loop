@@ -77,22 +77,20 @@ function onOrderButtonClick(e) {
             chefLoaf.removeChild(topStackFrame);
             eventQueue === null || eventQueue === void 0 ? void 0 : eventQueue.appendChild(topStackFrame);
             yield moveToLocation([-40, 36], [0, 0], chefLoaf);
-            yield promiseTimeout(() => __awaiter(this, void 0, void 0, function* () {
-                // move to eventQueue
-                yield moveToLocation(stackCoords, eventQueueCoords, eventLoaf);
-                const frame = eventQueue === null || eventQueue === void 0 ? void 0 : eventQueue.firstElementChild;
-                yield addFrameToLoaf(frame);
-                // move back to stack
-                yield moveToLocation(eventQueueCoords, stackCoords, eventLoaf);
-                yield addFrameToBox(frame, stack);
-                // ugh the nesting! ideally would like to not have this nested
-                yield promiseTimeout(() => {
-                    stack.removeChild(stack === null || stack === void 0 ? void 0 : stack.firstElementChild);
-                    const frame = document.createElement("div");
-                    frame.classList.add("frame");
-                    addFrameToLoaf(frame, "Loaf is served! 🍞");
-                }, 2000);
-            }), 1000);
+            // move to eventQueue
+            yield moveToLocation(stackCoords, eventQueueCoords, eventLoaf);
+            const frame = eventQueue === null || eventQueue === void 0 ? void 0 : eventQueue.firstElementChild;
+            yield addFrameToLoaf(frame);
+            // move back to stack
+            yield moveToLocation(eventQueueCoords, stackCoords, eventLoaf);
+            yield addFrameToBox(frame, stack);
+            // ugh the nesting! ideally would like to not have this nested
+            yield promiseTimeout(() => {
+                stack.removeChild(stack === null || stack === void 0 ? void 0 : stack.firstElementChild);
+                const frame = document.createElement("div");
+                frame.classList.add("frame");
+                addFrameToLoaf(frame, "Loaf is served! 🍞");
+            }, 2000);
         }
     });
 }

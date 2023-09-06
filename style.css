@@ -5,7 +5,7 @@
   --dark-pink: #e5645e;
 
   --padding-x: 2vw;
-  --padding-y: 1vw;
+  --padding-y: 3vw;
 }
 
 /* Reset CSS */
@@ -21,14 +21,23 @@ body {
   justify-content: center;
 }
 
-#canvas {
-  /* my macbook screen width */
+#canvas-wrapper {
+  height: 100vh;
   width: 100vw;
+  display: flex;
+  align-items: center;
+}
+
+#canvas {
+  width: 100vw;
+  /* my macbook screen width */
+
   height: 55vw;
   padding: var(--padding-y) var(--padding-x);
   overflow: hidden;
   position: relative;
-  border: 1px black solid;
+  border-top: 1px var(--dark-pink) dashed;
+  border-bottom: 1px var(--dark-pink) dashed;
 }
 
 .box {
@@ -74,12 +83,13 @@ body {
   width: 100%;
   display: flex;
   justify-content: space-between;
+  padding-top: var(--padding-y);
 }
 
 #event-queue-wrapper {
   position: absolute;
   right: var(--padding-x);
-  bottom: var(--padding-y);
+  bottom: 5vw;
 }
 
 #event-queue {
